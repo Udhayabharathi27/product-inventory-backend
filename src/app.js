@@ -11,18 +11,17 @@ const PORT = process.env.PORT || 5000;
 // Initialize database
 connectDB();
 
-// CORS Configuration - Allow your frontend domain
-const corsOptions = {
-  origin: [
-    'http://localhost:5173',
-    'https://product-inventory-frontend-black.vercel.app',
-    'https://product-inventory-frontend.vercel.app'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-};
+// FIX: Simple CORS that allows all origins
+app.use(cors({
+  origin: true, // Allow all origins
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-app.use(cors(corsOptions));
+// Handle preflight requests
+app.options('*', cors());
+
 app.use(express.json());
 
 // Routes
@@ -45,17 +44,6 @@ app.use('*', (req, res) => {
   });
 });
 
-// Error handling middleware
-app.use((error, req, res, next) => {
-  console.error('Error:', error);
-  res.status(500).json({
-    success: false,
-    error: 'Internal server error'
-  });
-});
-
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 Product Inventory API: http://localhost:${PORT}/api/products`);
-  console.log(`❤️ Health check: http://localhost:${PORT}/api/health`);
 });
