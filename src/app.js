@@ -11,11 +11,18 @@ const PORT = process.env.PORT || 5000;
 // Initialize database
 connectDB();
 
-// In src/app.js
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://your-frontend-domain.vercel.app'],
+// CORS Configuration - Allow your frontend domain
+const corsOptions = {
+  origin: [
+    'http://localhost:5173',
+    'https://product-inventory-frontend-black.vercel.app',
+    'https://product-inventory-frontend.vercel.app'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
